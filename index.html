@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>PHONE PROJECT</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/css/mdui.min.css"/>
+  <script type="text/javascript">
+    
+    window.onload = function() {
+      $.ajax({
+        url:"http://192.168.3.2:8080/verify.php",
+        async:false,
+        dataType:"json", 
+        type:"get",
+        error:function(){   
+        window.location.href = "/login.html";
+        }, 
+        success:function(data){
+          if(data["verify"] != true) window.location.href = "/login.html";
+        }
+      });
+    }
+    
+    function ukw_error() {
+      var block = new mdui.Dialog('#ukw_error');
+      block.open();
+    }
+    
+    function add_smsblock(which,title,subtitle,message) {
+      $("#sms"+which).append('<div class="mdui-card"><div class="mdui-card-primary"><div class="mdui-card-primary-title">'+ title +'</div><div class="mdui-card-primary-subtitle">'+ subtitle +'</div></div><div class="mdui-card-content">'+ message +'</div></div>');
+    }
+    
+    function clear_smsblock()
+    {
+      for (var i = 1; i <= 3; i++) {
+        var sms_block = document.getElementById("sms" + i);
+        if(!sms_block.hasChildNodes()) continue;
+        var sms_ele = sms_block.childNodes;
+        for (var j = sms_ele.length - 1; j >= 0; j--) {
+          sms_block.removeChild(sms_ele[j]);
+        }
+      }
+    }
+    
+    function sms_flash()
+    {
+      clear_smsblock();
+      $.ajax({
+        url:"http://192.168.3.2:8080/sms.php",
+        async:false,
+        dataType:"json", 
+        type:"get",
+        error:function(){   
+          //alert('error');  
+          ukw_error();
+        }, 
+        success:function(data){
+          for(var i = 0; i < Object.keys(data).length; i++) {
+            add_smsblock(Math.ceil((i+1)/Math.ceil((Object.keys(data).length/3))),data[i]["number"],data[i]["received"]+' ['+data[i]["type"]+']',data[i]["body"]);
+          }
+          mdui.snackbar({message: 'success'});
+        }
+      });
+    }
+    
+    function sms_send()
+    {
+      var number = document.getElementById("number").value;
+      var text = document.getElementById("text").value;
+      $.ajax({
+        url:"http://192.168.3.2:8080/sms_send.php?number="+number+"&text="+text,
+        async:false,
+        dataType:"json", 
+        type:"get",
+        error:function(){   
+          //alert('error');
+          ukw_error();
+        }, 
+        success:function(data){
+          //alert('success');
+          mdui.snackbar({message: 'success'});
+          text="";
+        }
+      });
+    }
+    
+    function signout()
+    {
+      var number = document.getElementById("number").value;
+      var text = document.getElementById("text").value;
+      $.ajax({
+        url:"http://192.168.3.2:8080/rms.php",
+        async:false,
+        dataType:"json", 
+        type:"get",
+        error:function(){   
+          //alert('error'); 
+          ukw_error();
+        }, 
+        success:function(data){
+          //alert('success');
+          mdui.snackbar({message: 'success'});
+          window.location.href = "/login.html";
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+
+  <div class="mdui-container">
+    
+    <div class="mdui-dialog" id="ukw_error">
+      <div class="mdui-dialog-title">Error</div>
+      <div class="mdui-dialog-content">Unknow error.</div>
+      <div class="mdui-dialog-actions">
+        <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
+      </div>
+    </div>
+    
+    <h1>SMS - RECEIVE  <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" onclick="sms_flash()">Flash</button></h1>
+    <div class="mdui-row" id="sms">
+      <div class="mdui-col-xs-12 mdui-col-md-4" id="sms1"></div>
+      <div class="mdui-col-xs-12 mdui-col-md-4" id="sms2"></div>
+      <div class="mdui-col-xs-12 mdui-col-md-4" id="sms3"></div>
+    </div>
+    
+    <div class="mdui-typo"><hr/></div>
+    
+    <h1>SMS - SEND</h1>
+    <div class="mdui-row">
+    <div class="mdui-col-xs-2">
+      <div class="mdui-textfield mdui-textfield-floating-label">
+        <label class="mdui-textfield-label">Number</label>
+        <input class="mdui-textfield-input" type="text" id="number"/>
+      </div>
+    </div>
+    <div class="mdui-col-xs-8">
+      <div class="mdui-textfield mdui-textfield-floating-label">
+        <label class="mdui-textfield-label">Text</label>
+        <input class="mdui-textfield-input" type="text" id="text"/>
+      </div>
+    </div>
+    <div class="mdui-col-xs-2">
+      <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-btn-dense" onclick="sms_send()" style="margin-top: 30px;">SEND</button>
+    </div>
+    </div>
+    
+    <h1>OTHERS</h1>
+    <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-btn-dense" onclick="signout()" style="margin-top: 30px;">SIGN OUT</button>
+    
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/js/mdui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  
+</body>
+</html>

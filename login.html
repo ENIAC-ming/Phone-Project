@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SIGN IN</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/css/mdui.min.css"/>
+<style>
+.login-box {
+  background-color: white;
+  width: 4.5rem;
+  min-height: 7rem;
+  border: 50px;
+  padding: 50px;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  margin: -1rem;
+  border-radius: 6px;
+}
+.mdui-card {
+  /*border-radius:15px;*/
+  border-bottom-left-radius : 20px;
+  border-top-right-radius : 20px;
+}
+</style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script>
+  window.onload = function() {
+    $.ajax({
+      url:"http://192.168.3.2:8080/verify.php",
+      async:false,
+      dataType:"json", 
+      type:"get",
+      error:function(){}, 
+      success:function(data){
+        if(data["verify"] == true) window.location.href = "/index.html";
+      }
+    });
+  }
+  function ukw_error() {
+    var block = new mdui.Dialog('#ukw_error');
+    block.open();
+  }
+  function wrong_pwd() {
+    var block = new mdui.Dialog('#wrong_pwd');
+    block.open();
+  }
+	function r()
+	{
+    var passwd = document.getElementById("password").value;
+		$.ajax({
+        url:"http://192.168.3.2:8080/sign.php?password="+passwd,
+        async:false,
+        dataType:"json", 
+        type:"get",
+        error:function() {   
+          //alert('error');
+          ukw_error();
+        }, 
+        success:function(data) {
+          if(data['success'] == true) {
+            window.location.href = "/index.html";
+          }
+          else
+          {
+            //alert('Password error.');
+            wrong_pwd();
+          }
+        }
+      });
+	}
+  
+  $(document).ready(function(){
+    $("#password").keydown(function(e) {
+      if (e.keyCode == 13) {
+          r();
+      }
+    });
+  });
+  
+</script>
+</head>
+<body bgproperties="fixed" style="margin:10%">
+<div class="mdui-container">
+  
+  <div class="mdui-dialog" id="wrong_pwd">
+    <div class="mdui-dialog-title">Wrong Password!</div>
+    <div class="mdui-dialog-content">You entered the wrong password!</div>
+    <div class="mdui-dialog-actions">
+      <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
+    </div>
+  </div>
+  
+  <div class="mdui-dialog" id="ukw_error">
+    <div class="mdui-dialog-title">Error</div>
+    <div class="mdui-dialog-content">Unknow error.</div>
+    <div class="mdui-dialog-actions">
+      <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
+    </div>
+  </div>
+  
+  <div class="mdui-row">
+    <div class="mdui-col-md-6 mdui-col-offset-md-3">
+      <div class="mdui-card mdui-hoverable">
+        <div class="mdui-card-actions">
+          <div class="mdui-textfield mdui-textfield-floating-label"> <i class="mdui-icon material-icons">lock</i>
+            <label class="mdui-textfield-label">Password</label>
+            <input class="mdui-textfield-input" name="password" id="password" type="password" autofocus="autofocus"/>
+          </div>
+          <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" onclick="r()" style="float: right">SIGN IN</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/js/mdui.min.js"></script> 
+</body>
+</html>
