@@ -13,15 +13,40 @@
         async:false,
         dataType:"json", 
         type:"get",
-        error:function(){   
+        error:function() {   
         window.location.href = "/login.html";
         }, 
-        success:function(data){
+        success:function(data) {
           if(data["verify"] != true) window.location.href = "/login.html";
         }
       });
     }
     
+    function bty_get() {
+      $.ajax({
+        url:"/bty.php",
+        async:false,
+        dataType:"json", 
+        type:"get",
+        error:function() {   
+          //alert('error');  
+          ukw_error();
+        }, 
+        success:function(data) {
+          num = data["percentage"];
+          status = data["status"];
+          document.getElementById('battery_line').style.width=num+'%';
+          document.getElementById('battery_num').innerHTML=num+'%';
+          if(status == "CHARGING") {
+            document.getElementById('battery').className += "mdui-theme-primary-green";
+          } else {
+            document.getElementById('battery').className += "mdui-theme-primary-indigo";
+          }
+          mdui.snackbar({message: 'success'});
+        }
+      });
+    }
+
     function ukw_error() {
       var block = new mdui.Dialog('#ukw_error');
       block.open();
@@ -132,7 +157,7 @@
     </div>
 
     <div class="mdui-dialog" id="empty_msg">
-      <div class="mdui-dialog-title">Empty</div>
+      <div class="mdui-dialog-title">Something Empty</div>
       <div class="mdui-dialog-content">There is something empty.</div>
       <div class="mdui-dialog-actions">
         <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
@@ -167,6 +192,18 @@
     </div>
     </div>
     
+    <h1>STATE</h1>
+    <div class="mdui-row" id="battery">
+      <div class="mdui-col-xs-2">Battery:</div>
+      <div class="mdui-col-xs-10">
+        <div class="mdui-progress">
+          <div class="mdui-progress-determinate" style="width: 30%;" id="battery_line"></div>
+        </div>
+      </div>
+      <div class="mdui-col-xs-2" id="battery_num">30%</div>
+    </div>
+    
+
     <h1>OTHERS</h1>
     <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-btn-dense" onclick="signout()" style="margin-top: 30px;">SIGN OUT</button>
     
