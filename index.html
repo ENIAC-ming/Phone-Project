@@ -9,7 +9,7 @@
     
     window.onload = function() {
       $.ajax({
-        url:"http://192.168.3.2:8080/verify.php",
+        url:"/verify.php",
         async:false,
         dataType:"json", 
         type:"get",
@@ -27,6 +27,11 @@
       block.open();
     }
     
+    function empty_msg() {
+      var block = new mdui.Dialog('#empty_msg');
+      block.open();
+    }
+
     function add_smsblock(which,title,subtitle,message) {
       $("#sms"+which).append('<div class="mdui-card"><div class="mdui-card-primary"><div class="mdui-card-primary-title">'+ title +'</div><div class="mdui-card-primary-subtitle">'+ subtitle +'</div></div><div class="mdui-card-content">'+ message +'</div></div>');
     }
@@ -47,7 +52,7 @@
     {
       clear_smsblock();
       $.ajax({
-        url:"http://192.168.3.2:8080/sms.php",
+        url:"/sms.php",
         async:false,
         dataType:"json", 
         type:"get",
@@ -68,21 +73,28 @@
     {
       var number = document.getElementById("number").value;
       var text = document.getElementById("text").value;
-      $.ajax({
-        url:"http://192.168.3.2:8080/sms_send.php?number="+number+"&text="+text,
-        async:false,
-        dataType:"json", 
-        type:"get",
-        error:function(){   
-          //alert('error');
-          ukw_error();
-        }, 
-        success:function(data){
-          //alert('success');
-          mdui.snackbar({message: 'success'});
-          text="";
-        }
-      });
+      if (number != '')
+      {
+        $.ajax({
+          url:"/sms_send.php?number="+number+"&text="+text,
+          async:false,
+          dataType:"json", 
+          type:"get",
+          error:function(){   
+            //alert('error');
+            ukw_error();
+          }, 
+          success:function(data){
+            //alert('success');
+            mdui.snackbar({message: 'success'});
+            text="";
+          }
+        });
+      }
+      else
+      {
+        empty_msg();
+      }
     }
     
     function signout()
@@ -90,7 +102,7 @@
       var number = document.getElementById("number").value;
       var text = document.getElementById("text").value;
       $.ajax({
-        url:"http://192.168.3.2:8080/rms.php",
+        url:"/rms.php",
         async:false,
         dataType:"json", 
         type:"get",
@@ -114,6 +126,14 @@
     <div class="mdui-dialog" id="ukw_error">
       <div class="mdui-dialog-title">Error</div>
       <div class="mdui-dialog-content">Unknow error.</div>
+      <div class="mdui-dialog-actions">
+        <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
+      </div>
+    </div>
+
+    <div class="mdui-dialog" id="empty_msg">
+      <div class="mdui-dialog-title">Empty</div>
+      <div class="mdui-dialog-content">There is something empty.</div>
       <div class="mdui-dialog-actions">
         <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
       </div>

@@ -26,7 +26,7 @@
 <script>
   window.onload = function() {
     $.ajax({
-      url:"http://192.168.3.2:8080/verify.php",
+      url:"/verify.php",
       async:false,
       dataType:"json", 
       type:"get",
@@ -48,7 +48,7 @@
 	{
     var passwd = document.getElementById("password").value;
 		$.ajax({
-        url:"http://192.168.3.2:8080/sign.php?password="+passwd,
+        url:"/sign.php?password="+passwd,
         async:false,
         dataType:"json", 
         type:"get",
@@ -92,7 +92,7 @@
   
   <div class="mdui-dialog" id="ukw_error">
     <div class="mdui-dialog-title">Error</div>
-    <div class="mdui-dialog-content">Unknow error.</div>
+    <div class="mdui-dialog-content">Unknown error.</div>
     <div class="mdui-dialog-actions">
       <button class="mdui-btn mdui-ripple" mdui-dialog-confirm>OK</button>
     </div>
