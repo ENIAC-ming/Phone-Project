@@ -38,9 +38,9 @@
           document.getElementById('battery_line').style.width=num+'%';
           document.getElementById('battery_num').innerHTML=num+'%';
           if(status == "CHARGING") {
-            document.getElementById('battery').className += "mdui-theme-primary-green";
+            document.getElementById('battery').className += " mdui-theme-primary-green";
           } else {
-            document.getElementById('battery').className += "mdui-theme-primary-indigo";
+            document.getElementById('battery').className += " mdui-theme-primary-indigo";
           }
           mdui.snackbar({message: 'success'});
         }
