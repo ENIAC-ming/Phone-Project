@@ -2,7 +2,7 @@
 if(!session_id())session_start();
 header('Content-Type:application/json; charset=utf-8');
 $pw = $_GET['password'];
-if ($pw == "password")
+if ($pw == "password") // Set Password Here
 {
     $_SESSION['sign']=true;
     echo '{"success":true}';

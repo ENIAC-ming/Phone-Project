@@ -7,7 +7,7 @@ if (isset($_SESSION['sign']))
 }
 else
 {
-    echo '[{"number":"未登录"}]';
+    echo '[{"number":"Error"}]';
 }
 ?>
 
