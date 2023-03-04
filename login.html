@@ -46,8 +46,10 @@
   }
 	function r()
 	{
+    var time = Math.floor(Date.now()/10000);
     var passwd = document.getElementById("password").value;
-		$.ajax({
+		passwd = md5(passwd + time);
+    $.ajax({
         url:"/sign.php?password="+passwd,
         async:false,
         dataType:"json", 
@@ -113,5 +115,6 @@
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/js/mdui.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.16.0/js/md5.min.js"></script> 
 </body>
 </html>
