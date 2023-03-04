@@ -46,7 +46,7 @@
   }
 	function r()
 	{
-    var time = Math.floor(Date.now()/10000);
+    var time = Math.floor(Date.now()/100000).toString();
     var passwd = document.getElementById("password").value;
 		passwd = md5(passwd + time);
     $.ajax({
